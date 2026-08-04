@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# PLACEHOLDER DOMAIN - update before launch
-Sitemap: https://wellandepoxyflooring.com/sitemap.xml
+Sitemap: https://www.wellandepoxyflooring.com/sitemap.xml

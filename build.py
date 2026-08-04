@@ -46,7 +46,7 @@ PHONE_DISPLAY = "+1 289-217-0530"
 PHONE_HREF    = "+12892170530"
 
 # CANONICAL DOMAIN. Feeds canonical tags, Open Graph, sitemap.xml and schema.
-DOMAIN = "https://wellandepoxyflooring.com"
+DOMAIN = "https://www.wellandepoxyflooring.com"
 
 # The markdown file holding all copy, in this folder.
 CONTENT_FILE = "Welland-Epoxy-Flooring-Website-Content.md"
@@ -685,7 +685,6 @@ def footer():
           <li>{CITY_PROV}</li>
           <li>Phone: <a href="tel:{PHONE_HREF}">{PHONE_DISPLAY}</a></li>
           <li>Hours: {HOURS_TEXT}</li>
-          <li><!-- PLACEHOLDER: add street address and email once confirmed --></li>
         </ul>
         <div class="btn-row">
           <a class="btn btn--primary btn--sm" href="#quote">Get a Free Quote</a>
@@ -1730,7 +1729,6 @@ urls = "\n".join(
   </url>""" for p in all_pages)
 open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8").write(
 f"""<?xml version="1.0" encoding="UTF-8"?>
-<!-- PLACEHOLDER DOMAIN: replace {DOMAIN} with the live domain before submitting to Google Search Console -->
 <urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">
 {urls}
 </urlset>
@@ -1740,7 +1738,6 @@ open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8").write(
 f"""User-agent: *
 Allow: /
 
-# PLACEHOLDER DOMAIN - update before launch
 Sitemap: {DOMAIN}/sitemap.xml
 """)
 
