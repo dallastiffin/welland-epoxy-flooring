@@ -195,7 +195,7 @@
      message but nothing is delivered — which is what you want while
      previewing locally.
      ================================================================== */
-  var SHEET_ENDPOINT = 'YOUR-APPS-SCRIPT-EXEC-URL';
+  var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxp5CRwAI1nYGAyTbLzbxWNvBSIFYCLNvqTXlNkhafL94uDDHzdcpnMHfw_tr6_MZlF/exec';
 
   /* Fallback for CORS trouble. Leave false. If submissions are reaching
      the sheet but the page still shows an error, set this to true: the

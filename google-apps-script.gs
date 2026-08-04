@@ -186,7 +186,7 @@ function reply(success, message) {
 function testWrite() {
   appendRow({
     name: 'Test Lead',
-    phone: '226-406-4401',
+    phone: '289-217-0530',
     email: 'test@example.com',
     service: 'Garage Floor Coating',
     message: 'This is a test row. Delete it.',
