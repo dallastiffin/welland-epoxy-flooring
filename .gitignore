@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+
+# Cloudflare / wrangler local state
+.wrangler/
+node_modules/
+
+# Note: the master *.png photos ARE tracked on purpose. They are the
+# originals that build.py --images reworks into site/images/. They are
+# never served to visitors because only site/ is deployed.
+
+# Photos kept out of the repo on purpose.
+#
+# warehouse.png carries another flooring company's logo and wordmark across a
+# crew member's hi-vis shirt. It is not used on this site and must not be.
+#
+# These three carry WOODSTOCK EPOXY FLOORING branding on the crew shirt and
+# resin pail. Woodstock is a sister brand, not a competitor, but it is the
+# wrong city's branding for this site.
+warehouse.png
+warehouse grey epoxy.png
+blue epoxy spread.png
+grey spready.png
+
+# Stray files from the build session
+_wtest.txt
+_dtest/
