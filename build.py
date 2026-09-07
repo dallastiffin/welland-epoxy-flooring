@@ -129,6 +129,24 @@ def public_url(slug):
 def esc(s):
     return html.escape(s, quote=False)
 
+
+EXTERNAL_REL = "noopener"
+
+_MD_LINK = re.compile(r'\[([^\]]+)\]\((https?://[^\s)]+|[a-z0-9-]+\.html)(?:\s+"([^"]*)")?\)')
+
+
+def rich(s):
+    """Escape prose, then turn [text](url ["nf"]) into a real anchor."""
+    out = esc(s)
+    def repl(m):
+        label, url, title = m.group(1), m.group(2), m.group(3)
+        if url.startswith("http://") or url.startswith("https://"):
+            rel = EXTERNAL_REL if title != "nf" else EXTERNAL_REL + " nofollow"
+            return ('<a class="ext-link" href="%s" target="_blank" rel="%s">%s</a>'
+                    % (html.escape(url, quote=True), rel, label))
+        return '<a href="%s">%s</a>' % (html.escape(url, quote=True), label)
+    return _MD_LINK.sub(repl, out)
+
 # ---------------------------------------------------------------- parse md
 raw = open(SRC, encoding="utf-8").read()
 blocks = [b.strip() for b in re.split(r'\n---\n', raw) if b.strip()]
@@ -673,6 +691,16 @@ def footer():
         </ul>
       </nav>
 
+      <nav aria-labelledby="footer-guides-heading">
+        <h3 id="footer-guides-heading">Guides</h3>
+        <ul class="footer-list">
+          <li><a href="epoxy-flooring-considerations-across-canada.html">Regional Guide</a></li>
+          <li><a href="seasonal-pricing-timelines.html">Seasonal Pricing Guide</a></li>
+          <li><a href="property-overhaul-planning.html">Property Project Planning</a></li>
+          <li><a href="protecting-coated-floors-exterior-work.html">Protecting Your Floor</a></li>
+        </ul>
+      </nav>
+
       <nav aria-labelledby="footer-svc-heading">
         <h3 id="footer-svc-heading">Services</h3>
         <ul class="footer-list">{svc}</ul>
@@ -724,7 +752,7 @@ def nodes_html(nodes, indent="        "):
     out = []
     for kind, text in nodes:
         if kind == "p":
-            out.append(f"{indent}<p>{esc(text)}</p>")
+            out.append(f"{indent}<p>{rich(text)}</p>")
         else:
             out.append(f"{indent}<h3>{esc(text)}</h3>")
     return "\n".join(out)
@@ -1710,6 +1738,65 @@ legal_page(
     ])
 
 # ============================================================================
+#  RESOURCE GUIDES  (added for the industry backlink program, Sep 2026)
+#  Four extra blocks appended to the end of the content file, after SITE
+#  COPY, so the original block indices above are untouched.
+# ============================================================================
+GUIDE_PAGES = [
+    ('epoxy-flooring-considerations-across-canada.html', (15) + 1, 'Regional Guide'),
+    ('seasonal-pricing-timelines.html', (15) + 2, 'Seasonal Pricing Guide'),
+    ('property-overhaul-planning.html', (15) + 3, 'Property Project Planning'),
+    ('protecting-coated-floors-exterior-work.html', (15) + 4, 'Protecting Your Floor'),
+]
+
+def guide_page(slug, block, nav_label):
+    h1, secs = block
+    closing = secs[-1]
+    body_secs = secs[:-1]
+    crumbs, crumb_ld = breadcrumbs([("Home", "index.html"), (h1, None)])
+    blocks_html = "".join(content_block(s) for s in body_secs)
+    page = head(f"{h1} | {BUSINESS}", f"{h1} - {BUSINESS}, {CITY_PROV}.", slug, crumb_ld)
+    page += header(slug)
+    page += crumbs
+    page += f"""
+<main id="main">
+<section class="hero hero--page" aria-labelledby="hero-heading">
+  <div class="container hero__inner">
+    <div class="hero__intro">
+      <span class="eyebrow" style="color:#ffb37a;">{esc(nav_label)}</span>
+      <h1 id="hero-heading">{esc(h1)}</h1>
+    </div>
+  </div>
+</section>
+<section class="section" aria-labelledby="guide-heading">
+  <div class="container">
+    <h2 id="guide-heading" class="visually-hidden">{esc(h1)}</h2>
+    <div class="layout-split">
+      <div class="prose">
+{blocks_html}      </div>
+{SIDEBAR}
+    </div>
+  </div>
+</section>
+<section class="cta-band" aria-labelledby="closing-heading">
+  <div class="container">
+    <h2 id="closing-heading">{esc(closing['title'])}</h2>
+{nodes_html(closing['nodes'], "    ")}
+    <div class="btn-row is-centered">
+      <a class="btn btn--primary btn--lg" href="#quote">Request an Estimate</a>
+      <a class="btn btn--ghost btn--lg" href="tel:{PHONE_HREF}">Call Now: {PHONE_DISPLAY}</a>
+    </div>
+  </div>
+</section>
+</main>
+"""
+    page += footer()
+    write(slug, page)
+
+for slug, idx, label in GUIDE_PAGES:
+    guide_page(slug, parsed[idx], label)
+
+# ============================================================================
 #  PLACEHOLDER IMAGES  (lightweight inline SVG so the site is never broken)
 # ============================================================================
 # Logo, favicon and social images are all real artwork now, produced from
@@ -1720,7 +1807,7 @@ legal_page(
 # ============================================================================
 # privacy-policy and terms are noindex, so they are deliberately absent here
 all_pages = ["index.html", "services.html"] + [s for s, _, _ in SERVICE_PAGES] + \
-            ["about.html", "faq.html", "contact.html"]
+            ["about.html", "faq.html", "contact.html"] + [s for s, _, _ in GUIDE_PAGES]
 urls = "\n".join(
     f"""  <url>
     <loc>{DOMAIN}{public_url(p)}</loc>
