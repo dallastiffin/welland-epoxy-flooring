@@ -195,7 +195,8 @@
      message but nothing is delivered — which is what you want while
      previewing locally.
      ================================================================== */
-  var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxp5CRwAI1nYGAyTbLzbxWNvBSIFYCLNvqTXlNkhafL94uDDHzdcpnMHfw_tr6_MZlF/exec';
+  var SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyUzWIbd-lu-Lbsx4iQWj0bLN1fqSG2pyzyhrR7O4clNP8Rx0wFUqknTYX8_Cjhx77fng/exec';
+  var SITE_KEY = 'welland-epoxy-flooring';
 
   /* Fallback for CORS trouble. Leave false. If submissions are reaching
      the sheet but the page still shows an error, set this to true: the
@@ -293,6 +294,7 @@
         // Which form on which page produced this lead
         data.source = form.getAttribute('data-source') || document.title;
         data.pageUrl = window.location.href;
+        data.site = SITE_KEY;
 
         var button = form.querySelector('button[type="submit"]');
         var originalText = button ? button.textContent : '';
